@@ -20,7 +20,7 @@
           <tr>
             <td>{{ $post->id }}</td>
             <td>{{ $post->title }}</td>
-            <td>{{ config('consts.blog-post.status')[$post->status] }}</td>
+            <td>{{ config('consts.post.status_label')[$post->status] }}</td>
             <td>{{ date('Y.m.d H:i', strtotime($post->post_date)) }}</td>
             <td>{{ date('Y.m.d H:i', strtotime($post->updated_at)) }}</td>
             <td class="text-align-center"><a href="{{ route('blog.show', ['postId' => $post->id]) }}" class="btn btn-sm btn-success" target="_blank">表示</a></td>

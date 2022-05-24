@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-// use Illuminate\Http\Request;
-// use App\Http\Requests\BlogPostRequest;
+use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 
@@ -51,7 +50,7 @@ class AdminController extends Controller
 		return view('admin.edit', compact('post'));
 	}
 
-  public function update(BlogPostRequest $request, int $postId)
+  public function update(PostRequest $request, int $postId)
 	{
 		$params = $request->except('_token');
 		$params['category'] = implode(',', $params['category']);

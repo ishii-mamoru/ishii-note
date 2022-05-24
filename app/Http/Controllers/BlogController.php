@@ -12,47 +12,47 @@ class BlogController extends Controller
         $posts = Post::GetLatePostList();
         $categories = Category::all();
 
-		foreach ($posts as $post) {
-			$post->category = $post->category ? explode(',', $post->category) : null;
-		}
+				foreach ($posts as $post) {
+					$post->category = $post->category ? explode(',', $post->category) : null;
+				}
 
-		return view('blog.index', compact('posts', 'categories'));
+				return view('blog.index', compact('posts', 'categories'));
     }
 
     public function show(int $postId)
-	{
-		$post = Post::GetPublicPost($postId);
-
-		// 未公開・削除記事
-		if (!$post->count())
 		{
-			return view('errors.404');
+			$post = Post::GetPublicPost($postId);
+
+			// 未公開・削除記事
+			if (!$post->count())
+			{
+				return view('errors.404');
+			}
+
+			$post->category = $post->category ? explode(',', $post->category) : null;
+
+			return view('blog.show', compact('post'));
 		}
-
-		$post->category = $post->category ? explode(',', $post->category) : null;
-
-		return view('blog.show', compact('post'));
-	}
 
     public function list()
-	{
-		$posts = Post::GetPublicPostList();
+		{
+			$posts = Post::GetPublicPostList();
 
-		foreach ($posts as $post) {
-			$post->category = $post->category ? explode(',', $post->category) : null;
+			foreach ($posts as $post) {
+				$post->category = $post->category ? explode(',', $post->category) : null;
+			}
+
+			return view('blog.list', compact('posts'));
 		}
-
-		return view('blog.list', compact('posts'));
-	}
 
     public function category(int $categoryId)
-	{
-		$posts = Post::GetCategoryPostList($categoryId);
+		{
+			$posts = Post::GetCategoryPostList($categoryId);
 
-		foreach ($posts as $post) {
-			$post->category = $post->category ? explode(',', $post->category) : null;
+			foreach ($posts as $post) {
+				$post->category = $post->category ? explode(',', $post->category) : null;
+			}
+
+			return view('blog.category', compact('posts', 'categoryId'));
 		}
-
-		return view('blog.category', compact('posts', 'categoryId'));
-	}
 }

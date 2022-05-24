@@ -1,4 +1,4 @@
-@extends('layouts.admin-layout')
+@extends('layouts.admin.layout')
 @section('card-header', '編集')
 @section('card-body')
   <form method="POST" action="{{ route('admin.update', ['postId' => $post->id]) }}">
@@ -11,7 +11,7 @@
       <div class="form-group col-2">
         <label><b>ステータス</b></label>
         <select class="form-control" name="status">
-          @foreach(config('consts.blog-post.status') as $key => $value)
+          @foreach(config('consts.post.status_label') as $key => $value)
             <option value="{{ $key }}" @if($key == $post->status) selected @endif>{{ $value }}</option>
           @endforeach
         </select>
@@ -24,7 +24,7 @@
     <div class="form-group">
       <label><b>カテゴリー</b></label>
       <div class="row">
-        @foreach(config('consts.blog-post.category') as $key => $value)
+        @foreach(config('consts.post.category') as $key => $value)
           <div class="form-check col-2 padding-left-40px">
             <input class="form-check-input" type="checkbox" name="category[]" id="category{{ $key }}" value="{{ $key }}" @if(in_array($key, $post->category)) checked @endif>
             <label class="form-check-label" for="category{{ $key }}">{{ $value }}</label>
@@ -48,7 +48,7 @@
   </form>
 @endsection
 @section('js')
-  <script src="{{ asset('/js/jquery-validation/jquery.validate.min.js') }}"></script>
-  <script src="https://cdn.tiny.cloud/1/xq0npliqrddx8b62rs4uzshn2wapew3cvge90e388lr78gxb/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-  <script src="{{ asset('/js/blog/form.js') }}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.4/jquery.validate.min.js" integrity="sha512-FOhq9HThdn7ltbK8abmGn60A/EMtEzIzv1rvuh+DqzJtSGq8BRdEN0U+j0iKEIffiw/yEtVuladk6rsG4X6Uqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.tiny.cloud/1/xq0npliqrddx8b62rs4uzshn2wapew3cvge90e388lr78gxb/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  <script src="{{ asset('/js/admin/form.js') }}"></script>
 @endsection

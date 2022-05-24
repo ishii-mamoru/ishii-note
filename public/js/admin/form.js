@@ -32,7 +32,7 @@ $("form").validate({
 });
 
 // 削除ボタン 確認ダイアログ
-$(document).on('click', '#delete', function(){
+$('#delete').click(function() {
   if(!confirm('投稿記事を削除しますか？')){
     return false;
   }
