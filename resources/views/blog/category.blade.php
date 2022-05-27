@@ -11,8 +11,8 @@
       <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
           <div class="site-heading">
-            <h2>{{ config('consts.post.category')[$categoryId] }}</h2>
-            <span class="subheading">{{ config('consts.post.category')[$categoryId] }}の一覧です。</span>
+            <h2>{{ $categories->find($categoryId)->name }}</h2>
+            <span class="subheading">{{ $categories->find($categoryId)->name }}の一覧です。</span>
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
           <div class="post-preview">
             @if($post->category)
               @foreach ($post->category as $categoryId)
-                <a href="{{ route('blog.category', ['categoryId' => $categoryId]) }}" class="category-tag">{{ config('consts.post.category')[$categoryId] }}</a>
+                <a href="{{ route('blog.category', ['categoryId' => $categoryId]) }}" class="category-tag">{{ $categories->find($categoryId)->name }}</a>
               @endforeach
             @endif
             <a href="{{ route('blog.show', ['postId' => $post->id]) }}">

@@ -25,10 +25,11 @@
     <div class="form-group">
       <label><b>カテゴリー</b></label>
       <div class="row">
-        @foreach(config('consts.post.category') as $key => $value)
+        @foreach($categories as $category)
           <div class="form-check col-2 padding-left-40px">
-            <input class="form-check-input" type="checkbox" name="category[]" id="category{{ $key }}" value="{{ $key }}">
-            <label class="form-check-label" for="category{{ $key }}">{{ $value }}</label>
+            <label class="form-check-label" for="category{{ $category->id }}">
+              <input class="form-check-input" type="checkbox" name="category[]" id="category{{ $category->id }}" value="{{ $category->id }}">{{ $category->name }}
+            </label>
           </div>
         @endforeach
       </div>

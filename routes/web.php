@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,4 +41,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'v
     Route::get('/edit/{postId}', [AdminController::class, 'edit'])->name('edit');
     Route::post('/update/{postId}', [AdminController::class, 'update'])->name('update');
     Route::post('/destroy/{postId}', [AdminController::class, 'destroy'])->name('destroy');
+    
+    // カテゴリー
+    Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::get('/create', [CategoryController::class, 'create'])->name('create');
+        Route::post('/store', [CategoryController::class, 'store'])->name('store');
+        Route::get('/edit/{categoryId}', [CategoryController::class, 'edit'])->name('edit');
+        Route::post('/update/{categoryId}', [CategoryController::class, 'update'])->name('update');
+        Route::post('/destroy/{categoryId}', [CategoryController::class, 'destroy'])->name('destroy');
+    });
 });

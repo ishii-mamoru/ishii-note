@@ -30,7 +30,7 @@
         <div class="col-md-10 col-lg-9 col-xl-9">
           @if($post->category)
             @foreach ($post->category as $categoryId)
-              <a href="{{ route('blog.category', ['categoryId' => $categoryId]) }}" class="category-tag">{{ config('consts.post.category')[$categoryId] }}</a>
+              <a href="{{ route('blog.category', ['categoryId' => $categoryId]) }}" class="category-tag">{{ $categories->find($categoryId)->name }}</a>
             @endforeach
           @endif
           {!! $post->content !!}

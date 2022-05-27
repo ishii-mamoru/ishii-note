@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Category;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\Auth;
 use Exception;
@@ -17,7 +18,8 @@ class AdminController extends Controller
 
   public function create()
 	{
-		return view('admin.create');
+		$categories = Category::oldest('order')->get();
+		return view('admin.create', compact('categories'));
 	}
 
   public function store(PostRequest $request)
@@ -46,8 +48,11 @@ class AdminController extends Controller
 			return view('errors.404');
 		}
 
+		$categories = Category::oldest('order')->get();
+
 		$post->category = explode(',', $post->category);
-		return view('admin.edit', compact('post'));
+		
+		return view('admin.edit', compact('post', 'categories'));
 	}
 
   public function update(PostRequest $request, int $postId)

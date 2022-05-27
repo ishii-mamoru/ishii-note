@@ -10,7 +10,7 @@ class BlogController extends Controller
     public function index()
     {
         $posts = Post::GetLatePostList();
-        $categories = Category::all();
+        $categories = Category::oldest('order')->get();
 
 				foreach ($posts as $post) {
 					$post->category = $post->category ? explode(',', $post->category) : null;
@@ -29,30 +29,34 @@ class BlogController extends Controller
 				return view('errors.404');
 			}
 
+			$categories = Category::oldest('order')->get();
+
 			$post->category = $post->category ? explode(',', $post->category) : null;
 
-			return view('blog.show', compact('post'));
+			return view('blog.show', compact('post', 'categories'));
 		}
 
     public function list()
 		{
 			$posts = Post::GetPublicPostList();
+			$categories = Category::oldest('order')->get();
 
 			foreach ($posts as $post) {
 				$post->category = $post->category ? explode(',', $post->category) : null;
 			}
 
-			return view('blog.list', compact('posts'));
+			return view('blog.list', compact('posts', 'categories'));
 		}
 
     public function category(int $categoryId)
 		{
 			$posts = Post::GetCategoryPostList($categoryId);
+			$categories = Category::oldest('order')->get();
 
 			foreach ($posts as $post) {
 				$post->category = $post->category ? explode(',', $post->category) : null;
 			}
 
-			return view('blog.category', compact('posts', 'categoryId'));
+			return view('blog.category', compact('posts', 'categoryId', 'categories'));
 		}
 }

@@ -27,7 +27,7 @@
           <div class="post-preview">
             @if($post->category)
               @foreach ($post->category as $categoryId)
-                <a href="{{ route('blog.category', ['categoryId' => $categoryId]) }}" class="category-tag">{{ config('consts.post.category')[$categoryId] }}</a>
+                <a href="{{ route('blog.category', ['categoryId' => $categoryId]) }}" class="category-tag">{{ $categories->find($categoryId)->name }}</a>
               @endforeach
             @endif
             <a href="{{ route('blog.show', ['postId' => $post->id]) }}">

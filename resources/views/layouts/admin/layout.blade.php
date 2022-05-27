@@ -40,12 +40,28 @@
         <!-- Nav Item - Dashboard -->
         <li class="nav-item @yield('index-active')">
           <a class="nav-link" href="{{ route('admin.index') }}">
-          <i class="fas fa-fw fa-table"></i>
-          <span>記事一覧</span></a>
+          <i class="fas fa-fw fa-book"></i>
+          <span>一覧</span></a>
         </li>
         <li class="nav-item @yield('create-active')">
           <a class="nav-link" href="{{ route('admin.create') }}">
-          <i class="fas fa-fw fa-pen"></i>
+          <i class="fas fa-fw fa-plus"></i>
+          <span>新規作成</span></a>
+        </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+        <!-- Heading -->
+        <div class="sidebar-heading">
+          カテゴリー
+        </div>
+        <li class="nav-item @yield('category-index-active')">
+          <a class="nav-link" href="{{ route('admin.category.index') }}">
+          <i class="fas fa-fw fa-tags"></i>
+          <span>一覧</span></a>
+        </li>
+        <li class="nav-item @yield('category-create-active')">
+          <a class="nav-link" href="{{ route('admin.category.create') }}">
+          <i class="fas fa-fw fa-plus"></i>
           <span>新規作成</span></a>
         </li>
         <!-- Divider -->
