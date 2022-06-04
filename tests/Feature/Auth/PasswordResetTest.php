@@ -11,6 +11,7 @@ use Tests\TestCase;
 class PasswordResetTest extends TestCase
 {
     use RefreshDatabase;
+    private $seed = true;
 
     public function test_reset_password_link_screen_can_be_rendered()
     {

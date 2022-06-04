@@ -13,6 +13,7 @@ use Tests\TestCase;
 class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;
+    private $seed = true;
 
     public function test_email_verification_screen_can_be_rendered()
     {
