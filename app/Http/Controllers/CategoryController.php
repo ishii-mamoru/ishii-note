@@ -46,6 +46,12 @@ class CategoryController extends Controller
     {
         $category = Category::find($categoryId);
 
+        // 存在しないカテゴリー
+		if (!$category)
+		{
+			return view('errors.404');
+		}
+
         return view('admin.category.edit', compact('category'));
     }
 

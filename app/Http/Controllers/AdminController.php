@@ -13,7 +13,7 @@ class AdminController extends Controller
 {
   public function index()
 	{
-		$posts = Post::GetPostList();
+		$posts = Post::all();
 		return view('admin.index', compact('posts'));
 	}
 
@@ -49,10 +49,10 @@ class AdminController extends Controller
 
   public function edit(int $postId)
 	{
-		$post = Post::GetPost($postId);
+		$post = Post::find($postId);
 
 		// 未公開・削除記事
-		if (!$post->count())
+		if (!$post)
 		{
 			return view('errors.404');
 		}

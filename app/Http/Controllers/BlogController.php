@@ -50,6 +50,12 @@ class BlogController extends Controller
 
     public function category(int $categoryId)
 		{
+			// 存在しないカテゴリー
+			if (!Category::where('id', $categoryId)->exists())
+			{
+				return view('errors.404');
+			}
+
 			$posts = Post::GetCategoryPostList($categoryId);
 			$categories = Category::oldest('order')->get();
 

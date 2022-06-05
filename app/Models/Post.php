@@ -56,7 +56,7 @@ class Post extends Model
         return $query
             ->select('id', 'status', 'category', 'post_date', 'title', 'subtitle')
             ->where('status', config('consts.post.status_id.public'))
-			->orderBy('id', 'desc')
+			->orderBy('post_date', 'desc')
 			->get();
     }
 
@@ -67,28 +67,7 @@ class Post extends Model
             ->select('id', 'status', 'category', 'post_date', 'title', 'subtitle')
             ->where('status', config('consts.post.status_id.public'))
             ->whereRaw('FIND_IN_SET(' . $categoryId . ',category)')
-			->orderBy('id', 'desc')
+			->orderBy('post_date', 'desc')
 			->get();
-    }
-
-    /**
-     * 管理画面用
-     */
-    // 記事一覧
-    public function scopeGetPostList(Builder $query)
-    {
-        return $query
-            ->select('id', 'status', 'post_date', 'title', 'updated_at')
-			->orderBy('id', 'desc')
-			->get();
-    }
-
-    // 編集用 記事を取得 
-    public function scopeGetPost(Builder $query, int $postId)
-    {
-        return $query
-            ->select('id', 'status', 'category', 'post_date', 'title', 'subtitle', 'content')
-            ->where('id', $postId)
-			->first();
     }
 }

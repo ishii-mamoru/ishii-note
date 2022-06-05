@@ -18,9 +18,10 @@ class PostSeeder extends Seeder
         Post::insert([
             [
                 'id' => 1,
+                'status' => 1,
                 'category' => '1,2,3',
                 'post_date' => now(),
-                'title' => 'タイトル1',
+                'title' => 'タイトル1（公開）',
                 'subtitle' => 'サブタイトル1',
                 'content' => '<p>本文1</p>',
                 'created_at' => now(),
@@ -29,9 +30,10 @@ class PostSeeder extends Seeder
             ],
             [
                 'id' => 2,
+                'status' => 2,
                 'category' => '1,2,3',
                 'post_date' => now(),
-                'title' => 'タイトル2',
+                'title' => 'タイトル2（非公開）',
                 'subtitle' => 'サブタイトル2',
                 'content' => '<p>本文2</p>',
                 'created_at' => now(),
@@ -40,9 +42,10 @@ class PostSeeder extends Seeder
             ],
             [
                 'id' => 3,
+                'status' => 1,
                 'category' => '1,2,3',
                 'post_date' => now(),
-                'title' => 'タイトル3',
+                'title' => 'タイトル3（公開）',
                 'subtitle' => 'サブタイトル3',
                 'content' => '<p>本文3</p>',
                 'created_at' => now(),
