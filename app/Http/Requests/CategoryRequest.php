@@ -28,4 +28,13 @@ class CategoryRequest extends FormRequest
             'order' => 'required|numeric',
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => '※ カテゴリー名を入力して下さい',
+            'order.required' => '※ 順番を入力して下さい',
+            'order.numeric' => '※ 順番は数字で入力して下さい',
+        ];
+    }
 }

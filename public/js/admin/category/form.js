@@ -13,7 +13,7 @@ var messages = {
     required: "※ カテゴリー名を入力して下さい",
   },
   "order": {
-    required: "※ 順序を入力して下さい",
+    required: "※ 順番を入力して下さい",
   },
 };
 

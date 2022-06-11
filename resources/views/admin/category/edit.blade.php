@@ -7,10 +7,16 @@
       <div class="form-group col-8">
         <label><b>カテゴリー名</b></label>
         <input class="form-control" type="text" name="name" placeholder="カテゴリー名を入力してください" value="{{ $category->name }}">
+        @error('name')
+          <div class="error">{{ $message }}</div>
+        @enderror
       </div>
       <div class="form-group col-4">
-        <label><b>順序</b></label>
+        <label><b>順番</b></label>
         <input class="form-control" type="number" name="order" value="{{ $category->order }}">
+        @error('order')
+          <div class="error">{{ $message }}</div>
+        @enderror
       </div>
     </div>
     <div class="text-align-center">

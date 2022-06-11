@@ -7,6 +7,9 @@
       <div class="form-group col-8">
         <label><b>タイトル</b></label>
         <input class="form-control" type="text" name="title" value="{{ $post->title }}" placeholder="タイトルを入力してください">
+        @error('title')
+          <div class="error">{{ $message }}</div>
+        @enderror
       </div>
       <div class="form-group col-2">
         <label><b>ステータス</b></label>
@@ -15,10 +18,16 @@
             <option value="{{ $key }}" @if($key == $post->status) selected @endif>{{ $value }}</option>
           @endforeach
         </select>
+        @error('status')
+          <div class="error">{{ $message }}</div>
+        @enderror
       </div>
       <div class="form-group col-2">
         <label><b>投稿日時</b></label>
         <input class="form-control" type="datetime-local" name="post_date" value="{{ date('Y-m-d\TH:i', strtotime($post->post_date)) }}">
+        @error('post_date')
+          <div class="error">{{ $message }}</div>
+        @enderror
       </div>
     </div>
     <div class="form-group">
@@ -31,11 +40,17 @@
             </label>
           </div>
         @endforeach
+        @error('category')
+          <div class="error">{{ $message }}</div>
+        @enderror
       </div>
     </div>
     <div class="form-group">
       <label><b>サブタイトル</b></label>
       <input class="form-control" type="text" name="subtitle" value="{{ $post->subtitle }}" placeholder="サブタイトルを入力してください">
+      @error('subtitle')
+        <div class="error">{{ $message }}</div>
+      @enderror
     </div>
     <div class="form-group" id="content-area">
       <label><b>本文</b></label>

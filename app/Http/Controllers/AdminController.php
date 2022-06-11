@@ -27,7 +27,7 @@ class AdminController extends Controller
 	{
 		$params = $request->all();
 		$params['user_id'] = Auth::id();
-		$params['category'] = implode(',', $params['category']);
+		$params['category'] = $params['category'] ? implode(',', $params['category']) : '';
 		$log = ['name' => 'store'];
 
 		try {
@@ -67,7 +67,7 @@ class AdminController extends Controller
   public function update(PostRequest $request, int $postId)
 	{
 		$params = $request->except('_token');
-		$params['category'] = implode(',', $params['category']);
+		$params['category'] = $params['category'] ? implode(',', $params['category']) : '';
 		$log = [
 			'name' => 'update',
 			'data' => $params,

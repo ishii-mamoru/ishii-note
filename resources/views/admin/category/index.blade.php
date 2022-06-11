@@ -7,7 +7,7 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>順序</th>
+          <th>順番</th>
           <th>カテゴリー</th>
           <th>編集</th>
         </tr>

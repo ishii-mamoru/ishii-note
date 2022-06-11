@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('order')->nullable()->default(null)->index()->comment('順序');
+            $table->tinyInteger('order')->nullable()->default(null)->index()->comment('順番');
             $table->string('name')->nullable()->default(null)->comment('カテゴリー名');
             $table->timestamps();
             $table->softDeletes();
