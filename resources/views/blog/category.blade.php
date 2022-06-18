@@ -27,7 +27,7 @@
           <div class="post-preview">
             @if($post->category)
               @foreach ($post->category as $categoryId)
-                <a href="{{ route('blog.category', ['categoryId' => $categoryId]) }}" class="category-tag">{{ $categories->find($categoryId)->name }}</a>
+                <a href="{{ route('blog.category', ['categoryId' => $categoryId]) }}" class="category-tag" data-test="{{ 'category-tag-'.$categoryId }}">{{ $categories->find($categoryId)->name }}</a>
               @endforeach
             @endif
             <a href="{{ route('blog.show', ['postId' => $post->id]) }}">
@@ -38,7 +38,7 @@
               Posted on {{ date('Y.m.d H:i', strtotime($post->post_date)) }}
             </p>
           </div>
-          <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="{{ route('blog.show', ['postId' => $post->id]) }}">もっと見る →</a></div>
+          <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="{{ route('blog.show', ['postId' => $post->id]) }}" data-test="{{ 'show-'.$post->id }}">もっと見る →</a></div>
           <!-- Divider-->
           <hr class="my-4" />
         @endforeach

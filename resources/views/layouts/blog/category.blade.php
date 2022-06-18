@@ -2,7 +2,7 @@
   <p class="category-title"><b>カテゴリー</b></p>
   @foreach($categories as $category)
     <div class="padding-bottom-20px">
-      <a href="{{ route('blog.category', ['categoryId' => $category->id]) }}">{{ $category->name }}</a>
+      <a href="{{ route('blog.category', ['categoryId' => $category->id]) }}" data-test="{{ 'category-menu-'.$category->id }}">{{ $category->name }}</a>
     </div>
   @endforeach
 </div>
