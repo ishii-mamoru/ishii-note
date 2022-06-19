@@ -18,7 +18,7 @@
             <td>{{ $category->id }}</td>
             <td>{{ $category->order }}</td>
             <td>{{ $category->name }}</td>
-            <td class="text-align-center"><a href="{{ route('admin.category.edit', ['categoryId' => $category->id]) }}" class="btn btn-sm btn-primary">編集</a></td>
+            <td class="text-align-center"><a href="{{ route('admin.category.edit', ['categoryId' => $category->id]) }}" class="btn btn-sm btn-primary" data-test="{{ 'edit-'.$category->id }}">編集</a></td>
           </tr>
         @endforeach
       </tbody>

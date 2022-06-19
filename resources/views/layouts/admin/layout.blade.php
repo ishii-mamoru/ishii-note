@@ -25,7 +25,7 @@
       <!-- Sidebar -->
       <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('admin.index') }}">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('admin.index') }}" data-test="index-icon">
           <div class="sidebar-brand-icon">
             <i class="fas fa-laptop-code"></i>
           </div>
@@ -39,12 +39,12 @@
         </div>
         <!-- Nav Item - Dashboard -->
         <li class="nav-item @yield('index-active')">
-          <a class="nav-link" href="{{ route('admin.index') }}">
+          <a class="nav-link" href="{{ route('admin.index') }}" data-test="blog-index">
           <i class="fas fa-fw fa-book"></i>
           <span>一覧</span></a>
         </li>
         <li class="nav-item @yield('create-active')">
-          <a class="nav-link" href="{{ route('admin.create') }}">
+          <a class="nav-link" href="{{ route('admin.create') }}" data-test="blog-create">
           <i class="fas fa-fw fa-plus"></i>
           <span>新規作成</span></a>
         </li>
@@ -55,12 +55,12 @@
           カテゴリー
         </div>
         <li class="nav-item @yield('category-index-active')">
-          <a class="nav-link" href="{{ route('admin.category.index') }}">
+          <a class="nav-link" href="{{ route('admin.category.index') }}" data-test="category-index">
           <i class="fas fa-fw fa-tags"></i>
           <span>一覧</span></a>
         </li>
         <li class="nav-item @yield('category-create-active')">
-          <a class="nav-link" href="{{ route('admin.category.create') }}">
+          <a class="nav-link" href="{{ route('admin.category.create') }}" data-test="category-create">
           <i class="fas fa-fw fa-plus"></i>
           <span>新規作成</span></a>
         </li>

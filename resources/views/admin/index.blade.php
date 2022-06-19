@@ -23,8 +23,8 @@
             <td>{{ config('consts.post.status_label')[$post->status] }}</td>
             <td>{{ date('Y.m.d H:i', strtotime($post->post_date)) }}</td>
             <td>{{ date('Y.m.d H:i', strtotime($post->updated_at)) }}</td>
-            <td class="text-align-center"><a href="{{ route('blog.show', ['postId' => $post->id]) }}" class="btn btn-sm btn-success" target="_blank">表示</a></td>
-            <td class="text-align-center"><a href="{{ route('admin.edit', ['postId' => $post->id]) }}" class="btn btn-sm btn-primary">編集</a></td>
+            <td class="text-align-center"><a href="{{ route('blog.show', ['postId' => $post->id]) }}" class="btn btn-sm btn-success" target="_blank" data-test="{{ 'show-'.$post->id }}">表示</a></td>
+            <td class="text-align-center"><a href="{{ route('admin.edit', ['postId' => $post->id]) }}" class="btn btn-sm btn-primary" data-test="{{ 'edit-'.$post->id }}">編集</a></td>
           </tr>
         @endforeach
       </tbody>
