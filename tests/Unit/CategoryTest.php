@@ -32,6 +32,7 @@ class CategoryTest extends TestCase
 
         $this->assertSame($category->order, 4);
         $this->assertSame($category->name, 'カテゴリー4');
+        $this->assertSame($category->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -42,6 +43,7 @@ class CategoryTest extends TestCase
 
         $this->assertNull($category->order);
         $this->assertNull($category->name);
+        $this->assertSame($category->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -81,6 +83,7 @@ class CategoryTest extends TestCase
 
         $this->assertSame($category->order, -128);
         $this->assertSame($category->name, 'カテゴリー4');
+        $this->assertSame($category->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -96,6 +99,7 @@ class CategoryTest extends TestCase
 
         $this->assertSame($category->order, 127);
         $this->assertSame($category->name, 'カテゴリー4');
+        $this->assertSame($category->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -123,6 +127,7 @@ class CategoryTest extends TestCase
 
         $this->assertSame($category->order, 4);
         $this->assertSame($category->name, '255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字');
+        $this->assertSame($category->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -150,6 +155,8 @@ class CategoryTest extends TestCase
 
         $this->assertSame($category->order, 4);
         $this->assertSame($category->name, 'カテゴリー1 更新');
+        $this->assertSame($category->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $this->assertSame($category->updated_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -189,6 +196,8 @@ class CategoryTest extends TestCase
 
         $this->assertSame($category->order, -128);
         $this->assertSame($category->name, 'カテゴリー1 更新');
+        $this->assertSame($category->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $this->assertSame($category->updated_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -204,6 +213,8 @@ class CategoryTest extends TestCase
 
         $this->assertSame($category->order, 127);
         $this->assertSame($category->name, 'カテゴリー1 更新');
+        $this->assertSame($category->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $this->assertSame($category->updated_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -231,6 +242,8 @@ class CategoryTest extends TestCase
 
         $this->assertSame($category->order, 4);
         $this->assertSame($category->name, '255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字');
+        $this->assertSame($category->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $this->assertSame($category->updated_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */

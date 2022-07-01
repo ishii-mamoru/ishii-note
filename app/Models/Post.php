@@ -23,6 +23,8 @@ class Post extends Model
 
     protected $dates = [
         'post_date',
+        'created_at',
+        'updated_at',
         'deleted_at',
     ];
 

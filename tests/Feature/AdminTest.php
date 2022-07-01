@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
@@ -13,6 +14,12 @@ class AdminTest extends TestCase
 {
     use RefreshDatabase;
     private $seed = true;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        RefreshDatabaseState::$migrated = false;
+    }
     
     // ========================================
     // 記事の一覧ページ
@@ -22,35 +29,19 @@ class AdminTest extends TestCase
     public function 記事の一覧ページのURLにアクセスしたとき、正常に画面が表示される()
     {
         $response = $this->actingAs(User::find(1))->get('/admin');
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function 記事の一覧ページのURLにアクセスしたとき、記事の一覧ページが表示される()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin');
-        $response->assertViewIs('admin.index');
-    }
-
-    /** @test */
-    public function 記事の一覧ページのURLにアクセスしたとき、ページに表示したい内容が存在する()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin');
-        $response->assertSeeInOrder(['タイトル1（公開）', 'タイトル2（非公開）', 'タイトル3（公開）']);
+        $response
+            ->assertStatus(200)
+            ->assertViewIs('admin.index')
+            ->assertSeeInOrder(['タイトル1（公開）', 'タイトル2（非公開）', 'タイトル3（公開）']);
     }
 
     /** @test */
     public function 未ログインで記事の一覧ページのURLにアクセスしたとき、302エラーになる()
     {
         $response = $this->get('/admin');
-        $response->assertStatus(302);
-    }
-
-    /** @test */
-    public function 未ログインで記事の一覧ページのURLにアクセスしたとき、ログインページにリダイレクトされる()
-    {
-        $response = $this->get('/admin');
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -68,28 +59,18 @@ class AdminTest extends TestCase
     public function 記事の新規作成ページのURLにアクセスしたとき、正常に画面が表示される()
     {
         $response = $this->actingAs(User::find(1))->get('/admin/create');
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function 記事の新規作成ページのURLにアクセスしたとき、記事の新規作成ページが表示される()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin/create');
-        $response->assertViewIs('admin.create');
+        $response
+            ->assertStatus(200)
+            ->assertViewIs('admin.create');
     }
 
     /** @test */
     public function 未ログインで記事の新規作成ページのURLにアクセスしたとき、302エラーになる()
     {
         $response = $this->get('/admin/create');
-        $response->assertStatus(302);
-    }
-
-    /** @test */
-    public function 未ログインで記事の新規作成ページのURLにアクセスしたとき、ログインページにリダイレクトされる()
-    {
-        $response = $this->get('/admin/create');
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -110,9 +91,22 @@ class AdminTest extends TestCase
             'subtitle' => 'サブタイトル4',
             'content' => '<p>本文4</p>',
         ]; 
-        $this->actingAs(User::find(1))->post(route('admin.store'), $params);
-        $data = Post::where('title', 'タイトル4')->first();
-        $this->assertNotNull($data);
+
+        $response = $this->actingAs(User::find(1))->post(route('admin.store'), $params);
+
+        $post = Post::where('id', 4)->first();
+
+        $this->assertSame($post->status, 1);
+        $this->assertSame($post->category, '1,2,3');
+        $this->assertSame($post->post_date->format('Y-m-d H:i'), '2022-01-01 00:00');
+        $this->assertSame($post->title, 'タイトル4');
+        $this->assertSame($post->subtitle, 'サブタイトル4');
+        $this->assertSame($post->content, '<p>本文4</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('admin.edit', ['postId' => $post->id]));
     }
 
     /** @test */
@@ -125,26 +119,23 @@ class AdminTest extends TestCase
             'title' => 'タイトル4',
             'subtitle' => 'サブタイトル4',
             'content' => NULL,
-        ]; 
-        $this->actingAs(User::find(1))->post(route('admin.store'), $params);
-        $data = Post::where('title', 'タイトル4')->first();
-        $this->assertNotNull($data);
-    }
+        ];
 
-    /** @test */
-    public function 新規作成処理完了後に、編集ページにリダイレクトされる()
-    {
-        $params = [
-            'status' => 1,
-            'category' => [1, 2, 3],
-            'post_date' => '2022-01-01 00:00',
-            'title' => 'タイトル4',
-            'subtitle' => 'サブタイトル4',
-            'content' => '<p>本文4</p>',
-        ]; 
         $response = $this->actingAs(User::find(1))->post(route('admin.store'), $params);
-        $data = Post::where('title', 'タイトル4')->first();
-        $response->assertRedirect(route('admin.edit', ['postId' => $data->id]));
+        
+        $post = Post::where('id', 4)->first();
+
+        $this->assertSame($post->status, 1);
+        $this->assertSame($post->category, '');
+        $this->assertSame($post->post_date->format('Y-m-d H:i'), '2022-01-01 00:00');
+        $this->assertSame($post->title, 'タイトル4');
+        $this->assertSame($post->subtitle, 'サブタイトル4');
+        $this->assertNull($post->content);
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('admin.edit', ['postId' => $post->id]));
     }
 
     /** @test */
@@ -159,7 +150,9 @@ class AdminTest extends TestCase
             'content' => '<p>本文4</p>',
         ]; 
         $response = $this->post(route('admin.store'), $params);
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -320,49 +313,28 @@ class AdminTest extends TestCase
     public function 記事の編集ページのURLにアクセスしたとき、正常に画面が表示される()
     {
         $response = $this->actingAs(User::find(1))->get('/admin/edit/1');
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function 記事の編集ページのURLにアクセスしたとき、記事の編集ページが表示される()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin/edit/1');
-        $response->assertViewIs('admin.edit');
-    }
-
-    /** @test */
-    public function 記事の編集ページのURLにアクセスしたとき、ページに表示したい内容が存在する()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin/edit/1');
-        $response->assertSee('タイトル1（公開）');
+        $response
+            ->assertStatus(200)
+            ->assertViewIs('admin.edit')
+            ->assertSee('タイトル1（公開）');
     }
 
     /** @test */
     public function 存在しない記事の編集ページのURLにアクセスしたとき、正常に画面が表示される()
     {
         $response = $this->actingAs(User::find(1))->get('/admin/edit/4');
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function 存在しない記事の編集ページのURLにアクセスしたとき、404ページが表示される()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin/edit/4');
-        $response->assertViewIs('errors.404');
+        $response
+            ->assertStatus(200)
+            ->assertViewIs('errors.404');
     }
 
     /** @test */
     public function 未ログインで記事の編集ページのURLにアクセスしたとき、302エラーになる()
     {
         $response = $this->get('/admin/edit/1');
-        $response->assertStatus(302);
-    }
-
-    /** @test */
-    public function 未ログインで記事の編集ページのURLにアクセスしたとき、ログインページにリダイレクトされる()
-    {
-        $response = $this->get('/admin/edit/1');
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -383,9 +355,23 @@ class AdminTest extends TestCase
             'subtitle' => 'サブタイトル1',
             'content' => '<p>本文1</p>',
         ]; 
-        $this->actingAs(User::find(1))->post(route('admin.update', ['postId' => 1]), $params);
-        $data = Post::where('title', 'タイトル1')->first();
-        $this->assertNotNull($data);
+
+        $response = $this->actingAs(User::find(1))->post(route('admin.update', ['postId' => 1]), $params);
+        
+        $post = Post::where('id', 1)->first();
+    
+        $this->assertSame($post->status, 1);
+        $this->assertSame($post->category, '1,2,3');
+        $this->assertSame($post->post_date->format('Y-m-d H:i'), '2022-01-01 00:00');
+        $this->assertSame($post->title, 'タイトル1');
+        $this->assertSame($post->subtitle, 'サブタイトル1');
+        $this->assertSame($post->content, '<p>本文1</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $this->assertSame($post->updated_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('admin.edit', ['postId' => $post->id]));
     }
 
     /** @test */
@@ -398,25 +384,23 @@ class AdminTest extends TestCase
             'title' => 'タイトル1',
             'subtitle' => 'サブタイトル1',
             'content' => NULL,
-        ]; 
-        $this->actingAs(User::find(1))->post(route('admin.update', ['postId' => 1]), $params);
-        $data = Post::where('title', 'タイトル1')->first();
-        $this->assertNotNull($data);
-    }
+        ];
 
-    /** @test */
-    public function 編集処理完了後に、編集ページにリダイレクトされる()
-    {
-        $params = [
-            'status' => 1,
-            'category' => [1, 2, 3],
-            'post_date' => '2022-01-01 00:00',
-            'title' => 'タイトル1',
-            'subtitle' => 'サブタイトル1',
-            'content' => '<p>本文1</p>',
-        ]; 
         $response = $this->actingAs(User::find(1))->post(route('admin.update', ['postId' => 1]), $params);
-        $response->assertRedirect(route('admin.edit', ['postId' => 1]));
+        
+        $post = Post::where('id', 1)->first();
+        
+        $this->assertSame($post->status, 1);
+        $this->assertSame($post->category, '');
+        $this->assertSame($post->post_date->format('Y-m-d H:i'), '2022-01-01 00:00');
+        $this->assertSame($post->title, 'タイトル1');
+        $this->assertSame($post->subtitle, 'サブタイトル1');
+        $this->assertNull($post->content);
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('admin.edit', ['postId' => $post->id]));
     }
 
     /** @test */
@@ -431,7 +415,9 @@ class AdminTest extends TestCase
             'content' => '<p>本文1</p>',
         ]; 
         $response = $this->post(route('admin.update', ['postId' => 1]), $params);
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -592,29 +578,18 @@ class AdminTest extends TestCase
     public function レコードが削除される()
     {
         $response = $this->actingAs(User::find(1))->post(route('admin.destroy', ['postId' => 1]));
-        // ToDo 200じゃないのかな？？
-        $response->assertStatus(302);
-    }
-
-    /** @test */
-    public function レコードを削除したとき、一覧ページにリダイレクトされる()
-    {
-        $response = $this->actingAs(User::find(1))->post(route('admin.destroy', ['postId' => 1]));
-        $response->assertRedirect(route('admin.index'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('admin.index'));
     }
 
     /** @test */
     public function 未ログイン時にレコードを削除しようとすると、302エラーになる()
     {
         $response = $this->post(route('admin.destroy', ['postId' => 1]));
-        $response->assertStatus(302);
-    }
-
-    /** @test */
-    public function 未ログイン時にレコードを削除しようとすると、ログインページにリダイレクトされる()
-    {
-        $response = $this->post(route('admin.destroy', ['postId' => 1]));
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -632,35 +607,19 @@ class AdminTest extends TestCase
     public function カテゴリーの一覧ページのURLにアクセスしたとき、正常に画面が表示される()
     {
         $response = $this->actingAs(User::find(1))->get('/admin/category');
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function カテゴリーの一覧ページのURLにアクセスしたとき、カテゴリーの一覧ページが表示される()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin/category');
-        $response->assertViewIs('admin.category.index');
-    }
-
-    /** @test */
-    public function カテゴリーの一覧ページのURLにアクセスしたとき、ページに表示したい内容が存在する()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin/category');
-        $response->assertSeeInOrder(['カテゴリー1', 'カテゴリー2', 'カテゴリー3']);
+        $response
+            ->assertStatus(200)
+            ->assertViewIs('admin.category.index')
+            ->assertSeeInOrder(['カテゴリー1', 'カテゴリー2', 'カテゴリー3']);
     }
 
     /** @test */
     public function 未ログインでカテゴリーの一覧ページのURLにアクセスしたとき、302エラーになる()
     {
         $response = $this->get('/admin/category');
-        $response->assertStatus(302);
-    }
-
-    /** @test */
-    public function 未ログインでカテゴリーの一覧ページのURLにアクセスしたとき、ログインページにリダイレクトされる()
-    {
-        $response = $this->get('/admin/category');
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -678,28 +637,18 @@ class AdminTest extends TestCase
     public function カテゴリーの新規作成ページのURLにアクセスしたとき、正常に画面が表示される()
     {
         $response = $this->actingAs(User::find(1))->get('/admin/category/create');
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function カテゴリーの新規作成ページのURLにアクセスしたとき、カテゴリーの新規作成ページが表示される()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin/category/create');
-        $response->assertViewIs('admin.category.create');
+        $response
+            ->assertStatus(200)
+            ->assertViewIs('admin.category.create');
     }
 
     /** @test */
     public function 未ログインでカテゴリーの新規作成ページのURLにアクセスしたとき、302エラーになる()
     {
         $response = $this->get('/admin/category/create');
-        $response->assertStatus(302);
-    }
-
-    /** @test */
-    public function 未ログインでカテゴリーの新規作成ページのURLにアクセスしたとき、ログインページにリダイレクトされる()
-    {
-        $response = $this->get('/admin/category/create');
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -715,22 +664,19 @@ class AdminTest extends TestCase
         $params = [
             'order' => 1,
             'name' => 'カテゴリー4',
-        ]; 
-        $this->actingAs(User::find(1))->post(route('admin.category.store'), $params);
-        $data = Category::where('name', 'カテゴリー4')->first();
-        $this->assertNotNull($data);
-    }
+        ];
 
-    /** @test */
-    public function カテゴリー新規作成処理完了後に、編集ページにリダイレクトされる()
-    {
-        $params = [
-            'order' => 1,
-            'name' => 'カテゴリー4',
-        ]; 
         $response = $this->actingAs(User::find(1))->post(route('admin.category.store'), $params);
-        $data = Category::where('name', 'カテゴリー4')->first();
-        $response->assertRedirect(route('admin.category.edit', ['categoryId' => $data->id]));
+        
+        $category = Category::where('id', 4)->first();
+        
+        $this->assertSame($category->order, 1);
+        $this->assertSame($category->name, 'カテゴリー4');
+        $this->assertSame($category->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('admin.category.edit', ['categoryId' => $category->id]));
     }
 
     /** @test */
@@ -741,7 +687,9 @@ class AdminTest extends TestCase
             'name' => 'カテゴリー4',
         ]; 
         $response = $this->post(route('admin.category.store'), $params);
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -796,49 +744,28 @@ class AdminTest extends TestCase
     public function カテゴリーの編集ページのURLにアクセスしたとき、正常に画面が表示される()
     {
         $response = $this->actingAs(User::find(1))->get('/admin/category/edit/1');
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function カテゴリーの編集ページのURLにアクセスしたとき、カテゴリーの編集ページが表示される()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin/category/edit/1');
-        $response->assertViewIs('admin.category.edit');
-    }
-
-    /** @test */
-    public function カテゴリーの編集ページのURLにアクセスしたとき、ページに表示したい内容が存在する()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin/category/edit/1');
-        $response->assertSee('カテゴリー1');
+        $response
+            ->assertStatus(200)
+            ->assertViewIs('admin.category.edit')
+            ->assertSee('カテゴリー1');
     }
 
     /** @test */
     public function 存在しないカテゴリーの編集ページのURLにアクセスしたとき、正常に画面が表示される()
     {
         $response = $this->actingAs(User::find(1))->get('/admin/category/edit/4');
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function 存在しないカテゴリーの編集ページのURLにアクセスしたとき、404ページが表示される()
-    {
-        $response = $this->actingAs(User::find(1))->get('/admin/category/edit/4');
-        $response->assertViewIs('errors.404');
+        $response
+            ->assertStatus(200)
+            ->assertViewIs('errors.404');
     }
 
     /** @test */
     public function 未ログインでカテゴリーの編集ページのURLにアクセスしたとき、302エラーになる()
     {
         $response = $this->get('/admin/category/edit/1');
-        $response->assertStatus(302);
-    }
-
-    /** @test */
-    public function 未ログインでカテゴリーの編集ページのURLにアクセスしたとき、ログインページにリダイレクトされる()
-    {
-        $response = $this->get('/admin/category/edit/1');
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -853,23 +780,19 @@ class AdminTest extends TestCase
     {
         $params = [
             'order' => 1,
-            'name' => 'カテゴリー1',
-        ]; 
-        $this->actingAs(User::find(1))->post(route('admin.category.update', ['categoryId' => 1]), $params);
-        $data = Category::where('name', 'カテゴリー1')->first();
-        $this->assertNotNull($data);
-    }
-
-    /** @test */
-    public function カテゴリー編集処理完了後に、編集ページにリダイレクトされる()
-    {
-        $params = [
-            'order' => 1,
-            'name' => 'カテゴリー1',
+            'name' => 'カテゴリー1 更新',
         ]; 
         $response = $this->actingAs(User::find(1))->post(route('admin.category.update', ['categoryId' => 1]), $params);
-        $data = Category::where('name', 'カテゴリー1')->first();
-        $response->assertRedirect(route('admin.category.edit', ['categoryId' => $data->id]));
+        
+        $category = Category::where('id', 1)->first();
+
+        $this->assertSame($category->order, 1);
+        $this->assertSame($category->name, 'カテゴリー1 更新');
+        $this->assertSame($category->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('admin.category.edit', ['categoryId' => $category->id]));
     }
 
     /** @test */
@@ -877,10 +800,12 @@ class AdminTest extends TestCase
     {
         $params = [
             'order' => 1,
-            'name' => 'カテゴリー1',
+            'name' => 'カテゴリー1 更新',
         ]; 
         $response = $this->post(route('admin.category.update', ['categoryId' => 1]), $params);
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -888,7 +813,7 @@ class AdminTest extends TestCase
     {
         $params = [
             'order' => 1,
-            'name' => 'カテゴリー1',
+            'name' => 'カテゴリー1 更新',
         ]; 
         $response = $this->actingAs(User::find(2))->post(route('admin.category.update', ['categoryId' => 1]), $params);
         $response->assertStatus(403);
@@ -899,7 +824,7 @@ class AdminTest extends TestCase
     {
         $params = [
             'order' => NULL,
-            'name' => 'カテゴリー1',
+            'name' => 'カテゴリー1 更新',
         ]; 
         $response = $this->actingAs(User::find(1))->post(route('admin.category.update', ['categoryId' => 1]), $params);
         $response->assertSessionHasErrors(['order' => '※ 順番を入力して下さい']);
@@ -910,7 +835,7 @@ class AdminTest extends TestCase
     {
         $params = [
             'order' => 'テスト',
-            'name' => 'カテゴリー1',
+            'name' => 'カテゴリー1 更新',
         ]; 
         $response = $this->actingAs(User::find(1))->post(route('admin.category.update', ['categoryId' => 1]), $params);
         $response->assertSessionHasErrors(['order' => '※ 順番は数字で入力して下さい']);
@@ -928,36 +853,25 @@ class AdminTest extends TestCase
     }
 
     // ========================================
-    // 記事の削除処理
+    // カテゴリーの削除処理
     // ========================================
 
     /** @test */
     public function カテゴリーのレコードが削除される()
     {
         $response = $this->actingAs(User::find(1))->post(route('admin.category.destroy', ['categoryId' => 1]));
-        // ToDo 200じゃないのかな？？
-        $response->assertStatus(302);
-    }
-
-    /** @test */
-    public function カテゴリーのレコードを削除したとき、一覧ページにリダイレクトされる()
-    {
-        $response = $this->actingAs(User::find(1))->post(route('admin.category.destroy', ['categoryId' => 1]));
-        $response->assertRedirect(route('admin.category.index'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('admin.category.index'));
     }
 
     /** @test */
     public function 未ログイン時にカテゴリーのレコードを削除しようとすると、302エラーになる()
     {
         $response = $this->post(route('admin.category.destroy', ['categoryId' => 1]));
-        $response->assertStatus(302);
-    }
-
-    /** @test */
-    public function 未ログイン時にカテゴリーのレコードを削除しようとすると、ログインページにリダイレクトされる()
-    {
-        $response = $this->post(route('admin.category.destroy', ['categoryId' => 1]));
-        $response->assertRedirect(route('login'));
+        $response
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
     /** @test */

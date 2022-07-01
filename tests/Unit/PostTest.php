@@ -41,6 +41,7 @@ class PostTest extends TestCase
         $this->assertSame($post->title, 'タイトル4');
         $this->assertSame($post->subtitle, 'サブタイトル4');
         $this->assertSame($post->content, '<p>本文4</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -48,7 +49,14 @@ class PostTest extends TestCase
     {
         Post::create();
         $post = Post::find(4);
+
         $this->assertSame($post->status, 2);
+        $this->assertNull($post->category);
+        $this->assertNull($post->post_date);
+        $this->assertNull($post->title);
+        $this->assertNull($post->subtitle);
+        $this->assertNull($post->content);
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -104,6 +112,7 @@ class PostTest extends TestCase
         $this->assertSame($post->title, 'タイトル4');
         $this->assertSame($post->subtitle, 'サブタイトル4');
         $this->assertSame($post->content, '<p>本文4</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -127,6 +136,7 @@ class PostTest extends TestCase
         $this->assertSame($post->title, 'タイトル4');
         $this->assertSame($post->subtitle, 'サブタイトル4');
         $this->assertSame($post->content, '<p>本文4</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -166,6 +176,7 @@ class PostTest extends TestCase
         $this->assertSame($post->title, 'タイトル4');
         $this->assertSame($post->subtitle, 'サブタイトル4');
         $this->assertSame($post->content, '<p>本文4</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -221,6 +232,7 @@ class PostTest extends TestCase
         $this->assertSame($post->title, '255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字');
         $this->assertSame($post->subtitle, 'サブタイトル4');
         $this->assertSame($post->content, '<p>本文4</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -260,6 +272,7 @@ class PostTest extends TestCase
         $this->assertSame($post->title, 'タイトル4');
         $this->assertSame($post->subtitle, '255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字');
         $this->assertSame($post->content, '<p>本文4</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -301,6 +314,8 @@ class PostTest extends TestCase
         $this->assertSame($post->title, 'タイトル1 更新');
         $this->assertSame($post->subtitle, 'サブタイトル1 更新');
         $this->assertSame($post->content, '<p>本文1</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $this->assertSame($post->updated_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -356,6 +371,8 @@ class PostTest extends TestCase
         $this->assertSame($post->title, 'タイトル1 更新');
         $this->assertSame($post->subtitle, 'サブタイトル1 更新');
         $this->assertSame($post->content, '<p>本文1</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $this->assertSame($post->updated_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -379,6 +396,8 @@ class PostTest extends TestCase
         $this->assertSame($post->title, 'タイトル1 更新');
         $this->assertSame($post->subtitle, 'サブタイトル1 更新');
         $this->assertSame($post->content, '<p>本文1</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $this->assertSame($post->updated_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -418,6 +437,8 @@ class PostTest extends TestCase
         $this->assertSame($post->title, 'タイトル1 更新');
         $this->assertSame($post->subtitle, 'サブタイトル1 更新');
         $this->assertSame($post->content, '<p>本文1</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $this->assertSame($post->updated_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -473,6 +494,8 @@ class PostTest extends TestCase
         $this->assertSame($post->title, '255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字');
         $this->assertSame($post->subtitle, 'サブタイトル1 更新');
         $this->assertSame($post->content, '<p>本文1</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $this->assertSame($post->updated_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
@@ -512,6 +535,8 @@ class PostTest extends TestCase
         $this->assertSame($post->title, 'タイトル1 更新');
         $this->assertSame($post->subtitle, '255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字255文字');
         $this->assertSame($post->content, '<p>本文1</p>');
+        $this->assertSame($post->created_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+        $this->assertSame($post->updated_at->format('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
     }
 
     /** @test */
