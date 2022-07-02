@@ -30,3 +30,19 @@
 h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
 	font-family: var(--bs-body-font-family);
 }
+
+header.masthead .site-heading h2 {
+	font-size: 26px;
+}
+header.masthead .site-heading .subheading {
+	font-size: 22px;
+}
+.post-preview > a > .post-title {
+	font-size: 24px;
+}
+.post-preview > a > .post-subtitle {
+	font-size: 20px;
+}
+.btn {
+	padding: 14px 24px;
+}
